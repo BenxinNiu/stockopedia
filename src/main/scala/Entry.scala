@@ -30,7 +30,11 @@ object Entry extends App {
 //  conf.set("fs.file.impl", classOf[org.apache.hadoop.fs.LocalFileSystem].getName)
 
 
-  daliyPriceConsolidator.consolidateRecord("","")
+  //daliyPriceConsolidator.consolidateRecord("","")
 
+//  spark.read.option("header", true).option("escape","\"").csv(Const.inventory).show
+
+inventoryListConsolidator.consolidateRecord()
+optionsContractConsolidator.consolidateRecord()
 
 }
