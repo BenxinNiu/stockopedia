@@ -10,11 +10,14 @@ import org.apache.spark.sql.functions.{col,udf}
 object daliyPriceConsolidator extends Consolidator {
 
 
- def consolidateRecord(ticker:String, fullName:String): DataFrame ={
+ def consolidateRecord(ticker:String): DataFrame ={
 
   val df: DataFrame = spark.read.option("header", true).option("escape","\"").csv(Const.prices)
-getThisYear(df).show
- df
+
+   ingestDailyData(getPrevYear(df),ticker+"PrevYear")
+   ingestDailyData(getThisYear(df),ticker+"ThisYear")
+
+
   }
 
   final val getYearMonth=udf((date: String) => {

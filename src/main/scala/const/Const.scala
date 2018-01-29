@@ -6,6 +6,11 @@ object Const {
 
    val config= ConfigFactory.load()
 
+  val mongoUrl=config.getString("app.mongo.devUrl")
+  val database=config.getString("app.mongo.database")
+
+  val tickerList=config.getString("app.list.ticker")
+
    val prices=config.getString("app.location.prices")
 
    val inventory=config.getString("app.location.inventory")

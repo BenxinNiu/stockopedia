@@ -6,8 +6,12 @@ import java.util.Date
 import main.scala.Entry.spark
 import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.functions.udf
-
+import com.mongodb.casbah.{MongoClient,MongoCollection}
+import com.mongodb.util.JSON
+import com.mongodb.casbah.Imports._
 import com.mongodb.DBObject
+
+import const.Const
 
 trait Consolidator {
 
@@ -15,15 +19,30 @@ trait Consolidator {
 
   def consolidate(): DataFrame = {
 
-
     null
   }
 
+//  def consolidateRecords():DataFrame={
+//
+//  }
 
-  def ingest(): Unit = {
+//Test function
+  def ingestDailyData(df:DataFrame,collection:String): Unit = {
+    val client=MongoClient(MongoClientURI(Const.mongoUrl))
+    val mongoCollection= client(Const.database)(collection)
 
+    mongoCollection.drop()
+    //mongoCollection.remove(MongoDBObject(""->""))
+      df.toJSON.collect.foreach(a => {
+        mongoCollection.insert(JSON.parse(a.toString).asInstanceOf[DBObject])
+      })
 
   }
+
+
+
+
+
 
   //d1 today's date
   def isAfterToday(d1:String,d2:String):Boolean={

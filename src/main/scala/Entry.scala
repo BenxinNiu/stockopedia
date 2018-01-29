@@ -1,4 +1,3 @@
-
 package main.scala
 
 
@@ -30,11 +29,10 @@ object Entry extends App {
 //  conf.set("fs.file.impl", classOf[org.apache.hadoop.fs.LocalFileSystem].getName)
 
 
-  //daliyPriceConsolidator.consolidateRecord("","")
+   val tickers:Array[String]=Const.tickerList.split(",")
 
-//  spark.read.option("header", true).option("escape","\"").csv(Const.inventory).show
+  tickers.foreach(a=>{
 
-inventoryListConsolidator.consolidateRecord()
-optionsContractConsolidator.consolidateRecord()
+  })
 
 }

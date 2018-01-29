@@ -31,6 +31,7 @@ object optionsContractConsolidator extends Consolidator {
     filteredDf
   }
 
+
   val trim=udf((date:String)=>{
     date.toString
   })
