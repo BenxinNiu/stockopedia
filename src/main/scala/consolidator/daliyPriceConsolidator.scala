@@ -4,7 +4,7 @@ import const.Const
 import main.scala.Entry.spark
 import org.apache.spark.sql.expressions.UserDefinedFunction
 import org.apache.spark.sql.{DataFrame, Dataset}
-import org.apache.spark.sql.functions.{col,udf}
+import org.apache.spark.sql.functions.{col,udf,lit}
 
 
 object daliyPriceConsolidator extends Consolidator {
@@ -16,7 +16,7 @@ object daliyPriceConsolidator extends Consolidator {
 
    ingestDailyData(getPrevYear(df),ticker+"PrevYear")
    ingestDailyData(getThisYear(df),ticker+"ThisYear")
-
+null
 
   }
 
@@ -44,6 +44,7 @@ object daliyPriceConsolidator extends Consolidator {
   def getThisYear(df: DataFrame): DataFrame={
     val year=acquireYear(df)
     df.withColumn("year",getYear(col(Const.DaliyPrice.date.colName)))
+        .withColumn("snapshot_type", lit("current_year"))
       .select(col(Const.DaliyPrice.date.colName).as(Const.DaliyPrice.report.asOfDate.colName),
         col(Const.DaliyPrice.open.colName).as(Const.DaliyPrice.report.open.colName),
         col(Const.DaliyPrice.high.colName).as(Const.DaliyPrice.report.high.colName),
@@ -56,6 +57,7 @@ object daliyPriceConsolidator extends Consolidator {
   def getPrevYear(df:DataFrame):DataFrame={
     val year=acquireYear(df)
     val tmp=df.withColumn("year",getYear(col(Const.DaliyPrice.date.colName)))
+      .withColumn("snapshot_type", lit("prev_year"))
       .select(col("year"),col(Const.DaliyPrice.date.colName),
         col(Const.DaliyPrice.open.colName),col(Const.DaliyPrice.high.colName),
         col(Const.DaliyPrice.low.colName),col(Const.DaliyPrice.close.colName),
@@ -79,6 +81,7 @@ object daliyPriceConsolidator extends Consolidator {
     val date=this.acquireMonth(df)
 
     df.withColumn("monthYear",getYearMonth(col(Const.DaliyPrice.date.colName)) )
+      .withColumn("snapshot_type", lit("current_month"))
       .select(col(Const.DaliyPrice.date.colName).as(Const.DaliyPrice.report.asOfDate.colName),
         col(Const.DaliyPrice.open.colName).as(Const.DaliyPrice.report.open.colName),
         col(Const.DaliyPrice.high.colName).as(Const.DaliyPrice.report.high.colName),

@@ -10,7 +10,6 @@ import org.apache.hadoop.fs._
 import const.Const
 
 
-
 object Entry extends App {
 
   val spark = SparkSession.builder
@@ -29,10 +28,12 @@ object Entry extends App {
 //  conf.set("fs.file.impl", classOf[org.apache.hadoop.fs.LocalFileSystem].getName)
 
 
-   val tickers:Array[String]=Const.tickerList.split(",")
+//   val tickers:Array[String]=Const.tickerList.split(",")
+//
+//  tickers.foreach(a=>{
+//
+//  })
 
-  tickers.foreach(a=>{
-
-  })
+  daliyPriceConsolidator.consolidateRecord("AAPL")
 
 }
