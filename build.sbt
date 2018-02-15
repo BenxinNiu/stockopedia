@@ -5,6 +5,8 @@ version := "0.1"
 
 //libraryDependencies += "org.typelevel" %% "cats" % "0.9.0"
 
+mainClass in (Compile, run) := Some("Entry.Entry")
+
 
 scalaVersion := "2.10.4"
 

@@ -1,9 +1,9 @@
-package consolidator
+package Consolidator
 
 import java.text.SimpleDateFormat
 import java.util.Date
 
-import main.scala.Entry.spark
+import Entry.DailyEntry.spark
 import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.functions.udf
 import com.mongodb.casbah.{MongoClient,MongoCollection}
@@ -17,20 +17,19 @@ trait Consolidator {
 
   val sc = spark.sparkContext
 
-  def consolidate(): DataFrame = {
-
+  def consolidate(ticker:String=null): DataFrame = {
+    consolidateRecord(ticker)
     null
   }
 
-//  def consolidateRecords():DataFrame={
-//
-//  }
+  def consolidateRecord(ticker:String=null):DataFrame={
+ null
+  }
 
 //Test function
-  def ingestDailyData(df:DataFrame,collection:String): Unit = {
+  def ingestDailyData(df:DataFrame,collection:String,snapshot_type:String): Unit = {
     val client=MongoClient(MongoClientURI(Const.mongoUrl))
     val mongoCollection= client(Const.database)(collection)
-
     mongoCollection.drop()
     //mongoCollection.remove(MongoDBObject(""->""))
       df.toJSON.collect.foreach(a => {
@@ -39,9 +38,9 @@ trait Consolidator {
 
   }
 
-
-
-
+  def loadCsv(path:String):DataFrame={
+    spark.read.option("header", true).option("escape","\"").csv(path)
+  }
 
 
   //d1 today's date
@@ -61,7 +60,4 @@ trait Consolidator {
   })
 
 }
-//
-//def acquireDate()={
-//  new SimpleDateFormat("yyyy-MM").format(new Date())
-//}
+

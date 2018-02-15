@@ -1,18 +1,23 @@
-package consolidator
+package Consolidator
 
 import java.text.SimpleDateFormat
 import java.util.{Date, Locale}
 
 import const.Const
-import main.scala.Entry.spark
+import Entry.DailyEntry.spark
+import com.mongodb.DBObject
+import com.mongodb.casbah.Imports.MongoClientURI
+import com.mongodb.casbah.MongoClient
+import com.mongodb.casbah.commons.MongoDBObject
+import com.mongodb.util.JSON
 import org.apache.spark.sql.{DataFrame, Dataset}
-import org.apache.spark.sql.functions.{col, udf}
+import org.apache.spark.sql.functions._
 
 
 object optionsContractConsolidator extends Consolidator {
 
 
-  def consolidateRecord(): DataFrame ={
+  override def consolidateRecord(ticker:String=null): DataFrame ={
 
     var inventoryDf:DataFrame=null
     if(spark.catalog.isCached("inventory")) {
@@ -28,7 +33,19 @@ object optionsContractConsolidator extends Consolidator {
 
   val filteredDf:DataFrame=filterExpiredContract(jointDf,"effective")
 
+    ingestDailyData(filteredDf,"option_contracts",ticker)
+
     filteredDf
+  }
+
+  override def ingestDailyData(df:DataFrame,collection:String,snapshot_type:String) :Unit ={
+    val client=MongoClient(MongoClientURI(Const.mongoUrl))
+    val mongoCollection= client(Const.database)(collection)
+    mongoCollection.remove(MongoDBObject("ticker"->snapshot_type))
+    df.toJSON.collect.foreach(a => {
+      println(a)
+      mongoCollection.insert(JSON.parse(a.toString).asInstanceOf[DBObject])
+    })
   }
 
 
@@ -45,11 +62,17 @@ object optionsContractConsolidator extends Consolidator {
       "effective"
   })
 
+  val generateId= udf((num:String,ticker:String)=>{
+    ticker+ "_" +num
+  })
+
   def filterExpiredContract(jointDf:DataFrame,condition:String):DataFrame={
 
 
    val finalDf= jointDf.withColumn("status", compareDates(col(Const.Options.report.EXPIR.colName)))
-      .select(
+     .withColumn("_id",monotonically_increasing_id())
+     .select(
+        generateId(col("_id"),col("ticker")).as("_id"),
         col("status").as("isExpired"),
         col(Const.Options.report.IDENTIFIER.colName),
         col(Const.Inventory.Report.NAME.colName),
@@ -59,8 +82,10 @@ object optionsContractConsolidator extends Consolidator {
         col(Const.Options.report.TYPE.colName),
         col(Const.Inventory.Report.LEI.colName),
         col(Const.Inventory.Report.CIK.colName)
-      ).where(col("isExpired").notEqual(col(Const.Options.report.EXPIR.colName)))
+      ).where(col("isExpired").=!=(col(Const.Options.report.EXPIR.colName)))
+
     finalDf
+
   }
 
   def getCallTypeNonExpired(jointDf:DataFrame):DataFrame={

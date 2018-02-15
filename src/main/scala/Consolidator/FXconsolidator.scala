@@ -1,4 +1,4 @@
-package consolidator
+package Consolidator
 
 import const.Const
 
