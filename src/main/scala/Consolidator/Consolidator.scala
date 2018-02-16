@@ -42,6 +42,9 @@ trait Consolidator {
     spark.read.option("header", true).option("escape","\"").csv(path)
   }
 
+  def loadJSON(path:String):DataFrame={
+    spark.read.json(path)
+  }
 
   //d1 today's date
   def isAfterToday(d1:String,d2:String):Boolean={

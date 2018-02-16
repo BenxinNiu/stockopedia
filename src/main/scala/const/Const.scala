@@ -15,7 +15,35 @@ object Const {
 
    val inventory=config.getString("app.location.inventory")
 
-  val options=config.getString("app.location.option")
+   val options=config.getString("app.location.option")
+
+   val client_detail=config.getString("app.location.client_detail")
+
+   val client_trans=config.getString("app.location.client_trans")
+
+  object clients_acc{
+    val date=new CSVField("asofdate","as of date")
+    val ticker=new CSVField("ticker","ticker")
+    val companyName=new CSVField("company_name","full name of company")
+    val volume=new CSVField("volume","share volume")
+    val ID=new CSVField("client","client id num")
+    val value=new CSVField("value_usd","total value in usd")
+    val account=new CSVField("acc_type","usd")
+  }
+
+  object trans{
+    val transType= new CSVField("trans_type","")
+    val book_value= new CSVField("book_value","")
+    val ask_price= new CSVField("ask_price","")
+    val fullfilled= new CSVField("fullfilled","")
+    val ticker= new CSVField("ticker","")
+    val trans_volume= new CSVField("trans_volume","")
+    val client_id= new CSVField("client_id","")
+    val trans_date= new CSVField("trans_date","")
+    val fullfilled_date= new CSVField("fullfilled_date","")
+    val ID=new CSVField("_id","trans id num")
+  }
+
 
    object DaliyPrice{
      val date=new CSVField("﻿\"DATE\"","as of date")

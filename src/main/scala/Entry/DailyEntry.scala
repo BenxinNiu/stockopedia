@@ -35,6 +35,9 @@ object DailyEntry extends App {
   //  })
 
   //daliyPriceConsolidator.consolidate()
-  inventoryListConsolidator.consolidate()
+ // InventoryListConsolidator.consolidate()
 //optionsContractConsolidator.consolidate("AAPL")
+
+  ClientDetailConsolidator.consolidate()
+  ClientTransactionConsolidator.consolidate("AAPL")
 }

@@ -12,7 +12,7 @@ import org.apache.spark.sql.functions._//{col, udf}
 
 
 
-object inventoryListConsolidator extends Consolidator {
+object InventoryListConsolidator extends Consolidator {
 
  override def consolidateRecord(ticker:String=null): DataFrame ={
 

@@ -14,7 +14,7 @@ import org.apache.spark.sql.{DataFrame, Dataset}
 import org.apache.spark.sql.functions._
 
 
-object optionsContractConsolidator extends Consolidator {
+object OptionsContractConsolidator extends Consolidator {
 
 
   override def consolidateRecord(ticker:String=null): DataFrame ={
@@ -25,7 +25,7 @@ object optionsContractConsolidator extends Consolidator {
      spark.catalog.clearCache()
     }
     else
-      inventoryDf=inventoryListConsolidator.consolidateRecord()
+      inventoryDf=InventoryListConsolidator.consolidateRecord()
 
    val optionContractDf=getOptionDataFrame()
 

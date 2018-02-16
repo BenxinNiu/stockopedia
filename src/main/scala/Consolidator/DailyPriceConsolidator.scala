@@ -12,7 +12,7 @@ import org.apache.spark.sql.{DataFrame, Dataset}
 import org.apache.spark.sql.functions._
 
 
-object daliyPriceConsolidator extends Consolidator {
+object DailyPriceConsolidator extends Consolidator {
 
 
  override def consolidateRecord(ticker:String): DataFrame ={
