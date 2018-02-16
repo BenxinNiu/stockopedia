@@ -12,6 +12,8 @@ import const.Const
 
 object DailyEntry extends App {
 
+  //TODO ::: add log 4j  and a user log
+
   val spark = SparkSession.builder
     .master("local")
     .appName("stockopedia")
@@ -27,17 +29,16 @@ object DailyEntry extends App {
   //
   //  conf.set("fs.file.impl", classOf[org.apache.hadoop.fs.LocalFileSystem].getName)
 
+//  val ticker=args(0)
+//  val updateInventory= if (args(1)== "true")
+//                            true
+//                        else
+//                           false
 
-  //   val tickers:Array[String]=Const.tickerList.split(",")
-  //
-  //  tickers.foreach(a=>{
-  //
-  //  })
+ // DailyJob.initiateDailyIngestion(ticker,updateInventory)
 
-  //daliyPriceConsolidator.consolidate()
- // InventoryListConsolidator.consolidate()
-//optionsContractConsolidator.consolidate("AAPL")
-
-  ClientDetailConsolidator.consolidate()
+  //TEST
+  ClientDetailConsolidator.consolidate("AAPL")
   ClientTransactionConsolidator.consolidate("AAPL")
+
 }

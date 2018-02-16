@@ -17,6 +17,8 @@ object Const {
 
    val options=config.getString("app.location.option")
 
+   val supportedCompany=config.getString("app.location.supportedCompany")
+
    val client_detail=config.getString("app.location.client_detail")
 
    val client_trans=config.getString("app.location.client_trans")
