@@ -7,6 +7,7 @@ object Const {
    val config= ConfigFactory.load()
 
   val mongoUrl=config.getString("app.mongo.devUrl")
+
   val database=config.getString("app.mongo.database")
 
   val tickerList=config.getString("app.list.ticker")
@@ -56,12 +57,12 @@ object Const {
      val volume=new CSVField("VOLUME","trade volume")
 
      object report{
-       val asOfDate= new CSVField("asOfDate","as of date")
+       val asOfDate= new CSVField("asofDate","as of date")
        val high=new CSVField("high","highest price")
        val low=new CSVField("low","lowest price")
        val open=new CSVField("open","open price")
        val close=new CSVField("close","closed price")
-       val volume=new CSVField("trade-volume","trade volume")
+       val volume=new CSVField("trade_volume","trade volume")
      }
 
    }

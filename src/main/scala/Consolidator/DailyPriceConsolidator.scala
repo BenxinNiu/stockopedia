@@ -15,18 +15,20 @@ import org.apache.spark.sql.functions._
 object DailyPriceConsolidator extends Consolidator {
 
 
- override def consolidateRecord(ticker:String): DataFrame ={
+ override def consolidateRecord(ingest: Boolean, ticker: String): DataFrame ={
 
   val df: DataFrame = loadCsv(Const.prices).withColumn("ticker",lit(ticker))
 
-   ingestDailyData(getThisYear(df),"price","current_year")
-   ingestDailyData(getPrevYear(df),"price","prev_year")
-   ingestDailyData(getThisMonth(df),"price","current_month")
-   ingestDailyData(getPrevMonth(df),"price","prev_month")
-   ingestDailyData(getSnapShot(10,df,"tmp"),"price","tmp")
 
-null
+   if (ingest){
+     ingestDailyData(getThisYear(df),"price","current_year")
+     ingestDailyData(getPrevYear(df),"price","prev_year")
+     ingestDailyData(getThisMonth(df),"price","current_month")
+     ingestDailyData(getPrevMonth(df),"price","prev_month")
+     ingestDailyData(getSnapShot(10,df,"tmp"),"price","tmp")
+   }
 
+     getThisYear(df).union(getPrevYear(df)).union(getThisMonth(df)).union(getPrevMonth(df)).union(getSnapShot(10,df,"tmp"))
   }
 
  override def ingestDailyData(df:DataFrame,collection:String,snapshot_type:String): Unit = {

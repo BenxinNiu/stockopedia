@@ -14,14 +14,15 @@ import org.apache.spark.sql.functions._
 
 object ClientTransactionConsolidator extends Consolidator {
 
-  override def consolidateRecord(ticker:String=null):DataFrame={
+  override def consolidateRecord(ingest: Boolean, ticker: String = null):DataFrame={
+
     var client_detail:DataFrame=null
     if(spark.catalog.isCached("client_detail")) {
       client_detail = spark.sql("SELECT * FROM client_detail")
       spark.catalog.clearCache()
     }
     else
-      client_detail = ClientDetailConsolidator.consolidateRecord()
+      client_detail = ClientDetailConsolidator.consolidateRecord(false, ticker)
 
     val client_trans:DataFrame= loadJSON(Const.client_trans)
 
@@ -88,7 +89,7 @@ object ClientTransactionConsolidator extends Consolidator {
       }
       case "false"=> { val percentage= askPrice.toDouble / close.toDouble
                        if (percentage <1 && percentage > 0.9 )
-                           "expected to fall 10 percent "
+                           "expect to fall 10 percent "
                        else if(percentage <1 && percentage > 0.7 )
                             "planning to short it (almost 30 percent drop)"
                        else if (percentage >1)

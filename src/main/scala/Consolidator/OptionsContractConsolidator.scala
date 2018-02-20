@@ -17,7 +17,7 @@ import org.apache.spark.sql.functions._
 object OptionsContractConsolidator extends Consolidator {
 
 
-  override def consolidateRecord(ticker:String=null): DataFrame ={
+  override def consolidateRecord(ingest: Boolean, ticker: String = null): DataFrame ={
 
     var inventoryDf:DataFrame=null
     if(spark.catalog.isCached("inventory")) {
@@ -25,7 +25,7 @@ object OptionsContractConsolidator extends Consolidator {
      spark.catalog.clearCache()
     }
     else
-      inventoryDf=InventoryListConsolidator.consolidateRecord()
+      inventoryDf=InventoryListConsolidator.consolidateRecord(true, ticker)
 
    val optionContractDf=getOptionDataFrame()
 
@@ -33,6 +33,7 @@ object OptionsContractConsolidator extends Consolidator {
 
   val filteredDf:DataFrame=filterExpiredContract(jointDf,"effective")
 
+    if (ingest)
     ingestDailyData(filteredDf,"option_contracts",ticker)
 
     filteredDf

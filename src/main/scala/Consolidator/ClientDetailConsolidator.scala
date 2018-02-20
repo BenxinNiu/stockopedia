@@ -14,12 +14,11 @@ import org.apache.spark.sql.functions._
 
 object ClientDetailConsolidator extends Consolidator {
 
-  override  def consolidateRecord(ticker:String=null):DataFrame={
+  override  def consolidateRecord(ingest: Boolean, ticker: String = null):DataFrame={
     val df:DataFrame=loadJSON(Const.client_detail)
 
     df.createOrReplaceTempView("client_detail")
-    df.cache()
-
+    df.cache
     //df.apply()
     df
 

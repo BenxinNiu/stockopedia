@@ -14,7 +14,7 @@ import org.apache.spark.sql.functions._//{col, udf}
 
 object InventoryListConsolidator extends Consolidator {
 
- override def consolidateRecord(ticker:String=null): DataFrame ={
+ override def consolidateRecord(ingest: Boolean, ticker: String = null): DataFrame ={
 
    val df:DataFrame=spark.read.option("header", true).option("escape","\"").csv(Const.inventory)
 
@@ -32,9 +32,10 @@ object InventoryListConsolidator extends Consolidator {
    inventoryDf.createOrReplaceTempView("inventory")
     inventoryDf.cache()
 
-   ingestDailyData(inventoryDf,"inventory",null)
+   if(ingest)
+     ingestDailyData(inventoryDf, "inventory", null)
 
-    inventoryDf
+       inventoryDf
   }
 
 

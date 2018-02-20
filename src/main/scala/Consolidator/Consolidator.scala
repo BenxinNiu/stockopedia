@@ -5,7 +5,7 @@ import java.util.Date
 
 import Entry.DailyEntry.spark
 import org.apache.spark.sql.DataFrame
-import org.apache.spark.sql.functions.udf
+import org.apache.spark.sql.functions._
 import com.mongodb.casbah.{MongoClient,MongoCollection}
 import com.mongodb.util.JSON
 import com.mongodb.casbah.Imports._
@@ -17,12 +17,12 @@ trait Consolidator {
 
   val sc = spark.sparkContext
 
-  def consolidate(ticker:String=null): DataFrame = {
-    consolidateRecord(ticker)
-    null
+  def consolidate(ingest: Boolean,ticker:String=null): DataFrame = {
+    consolidateRecord(ingest, ticker)
+
   }
 
-  def consolidateRecord(ticker:String=null):DataFrame={
+  def consolidateRecord(ingest: Boolean, ticker: String = null):DataFrame={
  null
   }
 
@@ -39,7 +39,8 @@ trait Consolidator {
   }
 
   def loadCsv(path:String):DataFrame={
-    spark.read.option("header", true).option("escape","\"").csv(path)
+ val df= spark.read.option("header", true).option("escape","\"").csv(path)
+  df
   }
 
   def loadJSON(path:String):DataFrame={
@@ -54,6 +55,8 @@ trait Consolidator {
     else
       false
   }
+
+
 
   final val checkForNull=udf((col: String)=>{
     if (col==null)

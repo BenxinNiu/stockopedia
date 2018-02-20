@@ -35,10 +35,13 @@ object DailyEntry extends App {
 //                        else
 //                           false
 
- // DailyJob.initiateDailyIngestion(ticker,updateInventory)
+  DailyPriceConsolidator.consolidate(false,"AAPL")
+
+ // DailyJob.initiateDailyIngestion("AAPL")
+
 
   //TEST
-  ClientDetailConsolidator.consolidate("AAPL")
-  ClientTransactionConsolidator.consolidate("AAPL")
+  //ClientDetailConsolidator.consolidate("AAPL")
+  //ClientTransactionConsolidator.consolidate("AAPL")
 
 }
