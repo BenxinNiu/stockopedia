@@ -2,12 +2,17 @@ package Entry
 
 
 
+import java.io.File
+
 import org.apache.spark.sql.{DataFrame, SparkSession}
 import com.typesafe.config.ConfigFactory
 import Consolidator._
+import _root_.Consolidator.DailyPriceConsolidator.loadCsv
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs._
 import const.Const
+import org.apache.spark.sql.functions.lit
+
 
 
 object DailyEntry extends App {
@@ -23,25 +28,18 @@ object DailyEntry extends App {
   val sc= spark.sparkContext
 
 
+  //val df= spark.read.option("header", true).option("escape","\"").csv("file:///home/benxin/stockopedia_daily/CUI/price.csv")
+
+
   //  val conf: Configuration = sc.hadoopConfiguration
   //
   //  conf.set("fs.hdfs.impl", classOf[org.apache.hadoop.hdfs.DistributedFileSystem].getName)
   //
   //  conf.set("fs.file.impl", classOf[org.apache.hadoop.fs.LocalFileSystem].getName)
 
-//  val ticker=args(0)
-//  val updateInventory= if (args(1)== "true")
-//                            true
-//                        else
-//                           false
 
-  DailyPriceConsolidator.consolidate(false,"AAPL")
-
- // DailyJob.initiateDailyIngestion("AAPL")
+  DailyJob.initiateDailyIngestion(false)
 
 
-  //TEST
-  //ClientDetailConsolidator.consolidate("AAPL")
-  //ClientTransactionConsolidator.consolidate("AAPL")
 
 }

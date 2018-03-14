@@ -10,6 +10,8 @@ object Const {
 
   val database=config.getString("app.mongo.database")
 
+  val workingDir =config.getString("app.location.home")
+
   val tickerList=config.getString("app.list.ticker")
 
    val prices=config.getString("app.location.prices")
@@ -49,7 +51,7 @@ object Const {
 
 
    object DaliyPrice{
-     val date=new CSVField("﻿\"DATE\"","as of date")
+     val date=new CSVField("DATE","as of date")
      val high=new CSVField("HIGH","highest price")
      val low=new CSVField("LOW","lowest price")
      val open=new CSVField("OPEN","open price")
@@ -69,7 +71,7 @@ object Const {
 
 
   object Options{
-    val IDENTIFIER=new CSVField("﻿\"IDENTIFIER\"","Identifier")
+    val IDENTIFIER=new CSVField("IDENTIFIER","Identifier")
     val TICKER=new CSVField("TICKER","ticker (code)")
     val EXPIR=new CSVField("EXPIRATION","contract expiration date")
     val STRIKE=new CSVField("STRIKE","strike price")
@@ -86,7 +88,7 @@ object Const {
   }
 
   object Inventory{
-       val TICKER=new CSVField("﻿\"TICKER\"","ticker (code)")
+       val TICKER=new CSVField("TICKER","ticker (code)")
        val NAME=new CSVField("NAME","company full name")
        val LEI=new CSVField("LEI","Legal Entity Identifier")
        val CIK=new CSVField("CIK","Central Index Key")

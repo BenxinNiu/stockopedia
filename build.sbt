@@ -5,8 +5,9 @@ version := "0.1"
 
 //libraryDependencies += "org.typelevel" %% "cats" % "0.9.0"
 
-mainClass in (Compile, run) := Some("Entry.Entry")
+mainClass in (Compile, run) := Some("Entry.DailyEntry")
 
+fork in run := true
 
 scalaVersion := "2.10.4"
 

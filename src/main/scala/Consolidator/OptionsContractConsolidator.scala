@@ -25,18 +25,23 @@ object OptionsContractConsolidator extends Consolidator {
      spark.catalog.clearCache()
     }
     else
-      inventoryDf=InventoryListConsolidator.consolidateRecord(true, ticker)
+      inventoryDf=InventoryListConsolidator.consolidateRecord(false, ticker)
 
-   val optionContractDf=getOptionDataFrame()
+   val optionContractDf=getOptionDataFrame(ticker)
 
+ if (optionContractDf !=null){
    val jointDf:DataFrame= optionJoinInventory(optionContractDf,inventoryDf)
 
-  val filteredDf:DataFrame=filterExpiredContract(jointDf,"effective")
+   val filteredDf:DataFrame=filterExpiredContract(jointDf,"effective")
 
-    if (ingest)
-    ingestDailyData(filteredDf,"option_contracts",ticker)
+   if (ingest)
+     ingestDailyData(filteredDf,"option_contracts",ticker)
 
-    filteredDf
+   filteredDf
+ }
+ else {
+   null
+ }
   }
 
   override def ingestDailyData(df:DataFrame,collection:String,snapshot_type:String) :Unit ={
@@ -44,7 +49,7 @@ object OptionsContractConsolidator extends Consolidator {
     val mongoCollection= client(Const.database)(collection)
     mongoCollection.remove(MongoDBObject("ticker"->snapshot_type))
     df.toJSON.collect.foreach(a => {
-      println(a)
+      println(a.toString)
       mongoCollection.insert(JSON.parse(a.toString).asInstanceOf[DBObject])
     })
   }
@@ -98,16 +103,22 @@ object OptionsContractConsolidator extends Consolidator {
     jointDf.select("*").where(col(Const.Options.report.TYPE.colName).equalTo("put"))
   }
 
-  def getOptionDataFrame():DataFrame={
+  def getOptionDataFrame(ticker:String):DataFrame={
 
-    val df=spark.read.option("header", true).option("escape","\"").csv(Const.options)
-    df.select(
-      col(Const.Options.IDENTIFIER.colName).as(Const.Options.report.IDENTIFIER.colName),
-      col(Const.Options.TICKER.colName).as(Const.Options.report.TICKER.colName),
-      col(Const.Options.EXPIR.colName).as(Const.Options.report.EXPIR.colName),
-      col(Const.Options.STRIKE.colName).as(Const.Options.report.STRIKE.colName),
-      col(Const.Options.TYPE.colName).as(Const.Options.report.TYPE.colName)
-    )
+    val df=loadCsv(Const.workingDir+ticker+"/options.csv")
+
+    if(df !=null){
+      df.select(
+        col(Const.Options.IDENTIFIER.colName).as(Const.Options.report.IDENTIFIER.colName),
+        col(Const.Options.TICKER.colName).as(Const.Options.report.TICKER.colName),
+        col(Const.Options.EXPIR.colName).as(Const.Options.report.EXPIR.colName),
+        col(Const.Options.STRIKE.colName).as(Const.Options.report.STRIKE.colName),
+        col(Const.Options.TYPE.colName).as(Const.Options.report.TYPE.colName)
+      )
+    }
+else {
+      null
+    }
   }
 
   def optionJoinInventory(optionDF:DataFrame,inventory:DataFrame):DataFrame={

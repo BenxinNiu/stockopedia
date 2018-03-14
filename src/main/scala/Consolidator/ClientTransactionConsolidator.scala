@@ -26,7 +26,7 @@ object ClientTransactionConsolidator extends Consolidator {
 
     val client_trans:DataFrame= loadJSON(Const.client_trans)
 
-    val priceDf:DataFrame= loadCsv(Const.prices).withColumn("ticker",lit(ticker))
+    val priceDf:DataFrame= loadCsv(Const.workingDir+ticker+"/price.csv").withColumn("ticker",lit(ticker))
 
     //val snapshotPriceDf:DataFrame= DailyPriceConsolidator.getSnapShot(30,priceDf,"analye").select(Const.DaliyPrice.close.colName)
 
