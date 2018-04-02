@@ -1,6 +1,8 @@
 package Entry
 
 //import Entry.DailyEntry.spark
+import java.io.File
+
 import const.Const
 import Consolidator._
 import org.apache.spark.sql.functions._
@@ -26,7 +28,13 @@ object DailyJob {
 
       list.rdd.collect.foreach(a=>{
         val ticker= a.toString().replaceAll("\\[","").replaceAll("\\]","")
+        val path=Const.workingDir+ticker+"/price.csv"
+        val file= new File(path.replace("file://",""))
+        println(path.replace("file:///",""))
+        if(file.exists())
         initiateConsolidators(ticker)
+        else
+          println("Skipping " + ticker + " Due to file not exist")
       })
     }
 else

@@ -28,15 +28,6 @@ object DailyEntry extends App {
   val sc= spark.sparkContext
 
 
-  //val df= spark.read.option("header", true).option("escape","\"").csv("file:///home/benxin/stockopedia_daily/CUI/price.csv")
-
-
-  //  val conf: Configuration = sc.hadoopConfiguration
-  //
-  //  conf.set("fs.hdfs.impl", classOf[org.apache.hadoop.hdfs.DistributedFileSystem].getName)
-  //
-  //  conf.set("fs.file.impl", classOf[org.apache.hadoop.fs.LocalFileSystem].getName)
-
 
   DailyJob.initiateDailyIngestion(false)
 
